@@ -1,5 +1,5 @@
 module "aks" {
-  source = "github.com/jamesrcounts/phippyandfriends.git//infrastructure/modules/aks?ref=main"
+  source = "../../modules/aks"
 
   for_each = toset(["dev", "prd"])
 

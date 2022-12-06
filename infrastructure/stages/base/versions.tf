@@ -1,6 +1,12 @@
 terraform {
-  required_version = ">= 0.15"
-  backend "azurerm" {}
+  required_version = "~> 1.3.6"
+
+  cloud {
+    organization = "olive-mercury"
+    workspaces {
+      tags = ["base","container", "pipelines"]
+    }
+  }
 
   required_providers {
     aws = {
@@ -9,15 +15,15 @@ terraform {
     }
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 1.4"
+      version = "~> 2"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.58"
+      version = "~> 3"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.1"
+      version = "~> 3"
     }
   }
 }

@@ -1,5 +1,5 @@
 module "agw" {
-  source = "github.com/jamesrcounts/phippyandfriends.git//infrastructure/modules/application-gateway?ref=application-gateway-0.0.1"
+  source = "../../modules/application-gateway"
   for_each = {
     "dev" = "dev.jamesrcounts.com"
     "prd" = "prd.jamesrcounts.com"

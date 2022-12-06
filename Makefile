@@ -1,18 +1,21 @@
-default: all
+default: plan
 
-all: base dev prd
+module := "base"
 
-base:
-	cd infrastructure/stages/base && \
-		make && \
-		make apply
+docs:
+	cd infrastructure/stages/$(module) && terraform-docs markdown document --output-file README.md --output-mode inject .
 
-dev:
-	cd infrastructure/stages/kubernetes-dev && \
-		make && \
-		make apply
+fmt:
+	cd infrastructure/stages/$(module) && terraform fmt -recursive
 
-prd:
-	cd infrastructure/stages/kubernetes-prd && \
-		make && \
-		make apply
+init:
+	cd infrastructure/stages/$(module) && \
+		terraform init --upgrade && \
+		terraform -v && \
+		terraform providers
+
+validate:
+		cd infrastructure/stages/$(module) && terraform validate
+
+plan: fmt validate docs
+		cd infrastructure/stages/$(module) && terraform plan
