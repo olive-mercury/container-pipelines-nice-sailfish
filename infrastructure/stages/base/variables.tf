@@ -8,8 +8,8 @@ variable "ops_subscription_id" {
   type        = string
 }
 
-variable "env_instance_id" {
-  description = "(Required) The instance ID for this project's resources."
+variable "resource_group_name" {
+  description = "The name of the resource group for this project."
   type        = string
 }
 
