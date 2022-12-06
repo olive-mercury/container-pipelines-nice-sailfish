@@ -6,7 +6,7 @@ data "azurerm_resource_group" "rg" {
 data "azurerm_resource_group" "ops" {
   provider = azurerm.ops
 
-  name = "rg-backend-${var.ops_instance_id}"
+  name = var.ops_resource_group_name
 }
 
 # Assign roles for resources in the resource group.
