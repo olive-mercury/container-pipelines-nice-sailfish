@@ -6,7 +6,7 @@ docs:
 	cd infrastructure/stages/$(module) && terraform-docs markdown document --output-file README.md --output-mode inject .
 
 fmt:
-	cd infrastructure/stages/$(module) && terraform fmt -recursive
+	terraform fmt -recursive
 
 init:
 	cd infrastructure/stages/$(module) && \
