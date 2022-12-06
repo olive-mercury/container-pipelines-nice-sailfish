@@ -1,0 +1,53 @@
+stages:
+  - stage: package
+    displayName: 'Package Helm Chart'
+    jobs:
+      - job: Helm
+        displayName: 'Build and Push Helm Chart'
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - task: HelmInstaller@1
+            displayName: 'Pin Helm Version'
+            inputs:
+              helmVersionToInstall: '3.7.1'
+
+          - task: Bash@3
+            displayName: 'Check Helm Chart'
+            inputs:
+              targetType: 'inline'
+              script: |
+                set -euo pipefail
+
+                helm lint $(chart_path) --strict
+
+          - task: Bash@3
+            displayName: 'Package Helm Chart'
+            inputs:
+              targetType: 'inline'
+              script: |
+                set -euo pipefail
+
+                helm package $(chart_path) --version $(Build.BuildNumber)
+
+          - task: AzureCLI@2
+            condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+            displayName: 'Push Helm Chart'
+            inputs:
+              addSpnToEnvironment: true
+              azureSubscription: 'AzureOps'
+              scriptLocation: 'inlineScript'
+              scriptType: 'bash'
+              inlineScript: |
+                set -euo pipefail
+
+                echo $servicePrincipalKey | \
+                  helm registry login $(LOGIN_SERVER) \
+                    --username $servicePrincipalId \
+                    --password-stdin
+
+                helm push $(System.DefaultWorkingDirectory)/$(containerRepository)-$(Build.BuildNumber).tgz oci://$(LOGIN_SERVER)/$(namespace)

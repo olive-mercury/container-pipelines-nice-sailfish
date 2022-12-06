@@ -1,0 +1,84 @@
+parameters:
+- name: baseDomain 
+  type: string
+  default: ""
+- name: environment
+  type: string
+- name: kubernetesCluster
+  type: string
+
+stages:
+  - stage:
+    variables:
+      ${{if parameters.baseDomain}}:
+        overrideValues: 'ingress.basedomain=${{ parameters.basedomain }},image.tag=$(imageTag),image.repository=$(LOGIN_SERVER)/$(containerRepository)'
+      ${{if not(parameters.baseDomain)}}:
+        overrideValues: 'image.tag=$(imageTag),image.repository=$(LOGIN_SERVER)/$(containerRepository)'
+    displayName: Helm Deploy
+    jobs:
+      - deployment: 
+        displayName: ${{ parameters.environment }} Deployment
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: ${{ parameters.environment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none
+
+                - task: HelmInstaller@1
+                  displayName: 'Pin Helm Version'
+                  inputs:
+                    helmVersionToInstall: '3.7.1'
+
+                - task: AzureCLI@2
+                  displayName: 'Prepare Deployment'
+                  env:
+                    AKS_RG: rg-$(AZURE_ENV_INSTANCE_ID)
+                    REGISTRY_SERVER: $(LOGIN_SERVER)
+                    CHART_PATH: $(local_chart_path)
+                  inputs:
+                    addSpnToEnvironment: true
+                    azureSubscription: 'AzureOps'
+                    failOnStandardError: true
+                    scriptLocation: 'inlineScript'
+                    scriptType: 'bash'
+                    inlineScript: |
+                      set -euo pipefail
+
+                      helm version
+
+                      echo "Login to AKS"
+                      az aks get-credentials \
+                        --resource-group ${AKS_RG} \
+                        --name '${{ parameters.kubernetesCluster }}' \
+                        --admin \
+                        --overwrite-existing \
+                        --only-show-errors \
+                        --subscription $(AZURE_ENV_SUBSCRIPTION_ID)
+
+                      echo "Sanity Check"
+                      helm list -A
+
+                      echo "Registry Login"
+                      echo $servicePrincipalKey | \
+                        helm registry login ${REGISTRY_SERVER} \
+                          --username $servicePrincipalId \
+                          --password-stdin
+
+                - task: HelmDeploy@0
+                  displayName: 'Deploy Helm Chart'
+                  inputs:
+                    connectionType: 'Azure Resource Manager'
+                    azureSubscription: 'AzureEnv'
+                    azureResourceGroup: rg-$(AZURE_ENV_INSTANCE_ID)
+                    kubernetesCluster: '${{ parameters.kubernetesCluster }}'
+                    useClusterAdmin: true
+                    namespace: 'apps'
+                    command: 'upgrade'
+                    chartType: 'Name'
+                    chartName: 'oci://$(LOGIN_SERVER)/$(namespace)/$(containerRepository)'
+                    releaseName: '$(containerRepository)'
+                    overrideValues: $(overrideValues)
+                    arguments: '--version $(chartTag)'

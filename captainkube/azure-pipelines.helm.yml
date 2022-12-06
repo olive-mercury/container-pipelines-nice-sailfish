@@ -1,0 +1,25 @@
+name: 0.1.$(Rev:r)
+
+trigger:
+  batch: true
+  paths:
+    include:
+      - captainkube/charts
+      - captainkube/azure-pipelines.helm.yaml
+  branches:
+    include:
+      - main
+
+variables:
+  - group: acr
+  - name: containerRepository
+    value: captainkube
+  - name: chart_path
+    value: captainkube/charts/captainkube
+  - name: namespace
+    value: charts
+  - name: HELM_EXPERIMENTAL_OCI
+    value: 1
+
+stages:
+  - template: '../pipeline-templates/helm-package.yml'

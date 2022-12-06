@@ -1,0 +1,25 @@
+name: 0.1.$(Rev:r)
+
+trigger:
+  batch: true
+  paths:
+    include:
+      - parrot/src/parrot/charts
+      - parrot/azure-pipelines.helm.yaml
+  branches:
+    include:
+      - main
+
+variables:
+  - group: acr
+  - name: containerRepository
+    value: parrot
+  - name: namespace
+    value: charts
+  - name: HELM_EXPERIMENTAL_OCI
+    value: 1
+  - name: chart_path
+    value: parrot/src/parrot/charts/parrot
+
+stages:
+  - template: '../pipeline-templates/helm-package.yml'
