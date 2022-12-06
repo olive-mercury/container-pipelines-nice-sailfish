@@ -3,24 +3,20 @@ resource "azurerm_kubernetes_cluster" "aks" {
     azurerm_role_assignment.network_contributor
   ]
 
-  dns_prefix          = local.aks_cluster_name
-  kubernetes_version  = data.azurerm_kubernetes_service_versions.current.latest_version
-  location            = local.resource_group.location
-  name                = local.aks_cluster_name
-  node_resource_group = "${var.resource_group.name}-${var.environment}-aks"
-  resource_group_name = local.resource_group.name
-  tags                = var.resource_group.tags
+  dns_prefix           = local.aks_cluster_name
+  kubernetes_version   = data.azurerm_kubernetes_service_versions.current.latest_version
+  location             = local.resource_group.location
+  name                 = local.aks_cluster_name
+  node_resource_group  = "${var.resource_group.name}-${var.environment}-aks"
+  resource_group_name  = local.resource_group.name
+  tags                 = var.resource_group.tags
+  azure_policy_enabled = true
 
-  addon_profile {
-    azure_policy { enabled = true }
-    oms_agent {
-      enabled                    = true
-      log_analytics_workspace_id = local.log_analytics_workspace.id
-    }
+  oms_agent {
+    log_analytics_workspace_id = local.log_analytics_workspace.id
   }
 
   default_node_pool {
-    availability_zones           = [1, 2, 3]
     enable_auto_scaling          = true
     max_count                    = 3
     min_count                    = 1
@@ -32,6 +28,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     tags                         = var.resource_group.tags
     vm_size                      = "Standard_DS2_v2"
     vnet_subnet_id               = azurerm_subnet.subnet["aks-subnet"].id
+    zones                        = [1, 2, 3]
 
     upgrade_settings {
       max_surge = "200"
@@ -39,8 +36,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   identity {
-    type                      = "UserAssigned"
-    user_assigned_identity_id = azurerm_user_assigned_identity.aks.id
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.aks.id]
   }
 
   network_profile {
@@ -52,12 +49,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     service_cidr       = "10.0.0.0/16"
   }
 
-  role_based_access_control {
-    enabled = true
-    azure_active_directory {
-      managed                = true
-      admin_group_object_ids = [azuread_group.aks_administrators.object_id]
-    }
+  azure_active_directory_role_based_access_control {
+    admin_group_object_ids = [azuread_group.aks_administrators.object_id]
+    azure_rbac_enabled     = true
+    managed                = true
+    tenant_id              = data.azurerm_client_config.current.tenant_id
   }
 }
-

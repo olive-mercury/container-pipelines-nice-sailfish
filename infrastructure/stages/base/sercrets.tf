@@ -1,8 +1,7 @@
-
 data "azurerm_key_vault" "config" {
   provider = azurerm.ops
 
-  name                = "kv-${var.ops_instance_id}"
+  name                = "kv-${local.ops_instance_id}"
   resource_group_name = data.azurerm_resource_group.ops.name
 }
 
