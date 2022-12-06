@@ -13,7 +13,7 @@ variable "env_instance_id" {
   type        = string
 }
 
-variable "env_subscription_id" {
+variable "subscription_id" {
   description = "(Required) The Azure subscription ID for the solution environment."
   type        = string
 }
