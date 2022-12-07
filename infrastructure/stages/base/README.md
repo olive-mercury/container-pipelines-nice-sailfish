@@ -23,15 +23,57 @@ Description: The name of the resource group for this project.
 
 Type: `string`
 
-### <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id)
+## Optional Inputs
 
-Description: The Azure subscription ID for the solution environment.
+The following input variables are optional (have default values):
+
+### <a name="input_aws_access_key_id"></a> [aws\_access\_key\_id](#input\_aws\_access\_key\_id)
+
+Description: Specifies the AWS access key ID for the AWS Terraform provider.
 
 Type: `string`
 
-## Optional Inputs
+Default: `null`
 
-No optional inputs.
+### <a name="input_aws_secret_access_key"></a> [aws\_secret\_access\_key](#input\_aws\_secret\_access\_key)
+
+Description: Specifies the AWS access key secret for the AWS Terraform provider.
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_client_id"></a> [client\_id](#input\_client\_id)
+
+Description: The AzureAD Appication Client ID
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_client_secret"></a> [client\_secret](#input\_client\_secret)
+
+Description: The AzureAD Application Password
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id)
+
+Description: The Azure subscription ID
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id)
+
+Description: The Azure AD tenant ID
+
+Type: `string`
+
+Default: `null`
 
 ## Outputs
 
