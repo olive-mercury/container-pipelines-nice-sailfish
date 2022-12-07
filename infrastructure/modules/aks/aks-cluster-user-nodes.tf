@@ -5,7 +5,6 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   min_count             = 1
   mode                  = "User"
   name                  = "user"
-  node_labels           = local.aks_node_labels
   orchestrator_version  = data.azurerm_kubernetes_service_versions.current.latest_version
   os_disk_size_gb       = 1024
   tags                  = var.resource_group.tags
