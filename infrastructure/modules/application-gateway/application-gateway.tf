@@ -83,18 +83,20 @@ resource "azurerm_application_gateway" "agw" {
   }
 
   request_routing_rule {
-    name                       = "https"
-    rule_type                  = "Basic"
-    http_listener_name         = "https"
     backend_address_pool_name  = local.backend_address_pool_name
     backend_http_settings_name = "https"
+    http_listener_name         = "https"
+    name                       = "https"
+    priority                   = 100
+    rule_type                  = "Basic"
   }
 
   request_routing_rule {
-    name                        = "http"
-    rule_type                   = "Basic"
     http_listener_name          = "http"
+    name                        = "http"
+    priority                    = 200
     redirect_configuration_name = "http-to-https"
+    rule_type                   = "Basic"
   }
 
   redirect_configuration {
