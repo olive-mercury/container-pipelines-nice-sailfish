@@ -5,6 +5,7 @@ resource "azurerm_public_ip_prefix" "pib" {
   resource_group_name = var.resource_group.name
   sku                 = "Standard"
   tags                = var.resource_group.tags
+  zones               = [1, 2, 3]
 }
 
 resource "azurerm_public_ip" "agw" {
@@ -15,6 +16,6 @@ resource "azurerm_public_ip" "agw" {
   public_ip_prefix_id = azurerm_public_ip_prefix.pib.id
   resource_group_name = var.resource_group.name
   sku                 = "Standard"
-  zones               = [1, 2, 3]
   tags                = var.resource_group.tags
+  zones               = [1, 2, 3]
 }
