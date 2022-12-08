@@ -1,19 +1,27 @@
 terraform {
-  required_version = ">= 0.15"
+  required_version = ">= 1"
 
-  backend "azurerm" {
-
+  cloud {
+    organization = "olive-mercury"
+    workspaces {
+      tags = ["kubernetes", "container", "pipelines"]
+    }
   }
 
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.58"
+      version = "~> 2"
+    }
+
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2"
     }
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.1"
+      version = "~> 2"
     }
   }
 }

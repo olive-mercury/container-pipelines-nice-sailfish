@@ -1,5 +1,5 @@
 module "aks" {
-  source = "github.com/jamesrcounts/phippyandfriends.git//infrastructure/modules/kubernetes?ref=main"
+  source = "../../modules/kubernetes"
 
   aks_subnet_cidr = data.azurerm_subnet.aks.address_prefixes.0
   tls = {
@@ -7,11 +7,10 @@ module "aks" {
   }
 }
 
-
 data "azurerm_resource_group" "config" {
   provider = azurerm.ops
 
-  name = "rg-backend-${local.backend_instance_id}"
+  name = var.ops_resource_group_name
 }
 
 data "azurerm_key_vault" "config" {

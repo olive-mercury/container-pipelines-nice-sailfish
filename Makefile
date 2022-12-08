@@ -1,7 +1,5 @@
 default: plan
 
-module := "base"
-
 docs:
 	cd infrastructure/stages/$(module) && terraform-docs markdown document --output-file README.md --output-mode inject .
 
