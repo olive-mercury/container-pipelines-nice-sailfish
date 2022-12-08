@@ -1,7 +1,12 @@
 terraform {
   required_version = ">= 1"
 
-  backend "azurerm" {}
+  cloud {
+    organization = "olive-mercury"
+    workspaces {
+      tags = ["kubernetes", "container", "pipelines"]
+    }
+  }
 
   required_providers {
     azurerm = {

@@ -11,7 +11,6 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
-
 variable "client_id" {
   default     = null
   description = "The AzureAD Appication Client ID"
