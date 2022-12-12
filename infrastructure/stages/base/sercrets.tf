@@ -1,13 +1,9 @@
 data "azurerm_key_vault" "config" {
-  provider = azurerm.ops
-
   name                = "kv-${local.ops_instance_id}"
   resource_group_name = data.azurerm_resource_group.ops.name
 }
 
 data "azurerm_key_vault_certificate" "certificate" {
-  provider = azurerm.ops
-
   for_each = {
     dev = "dev-jamesrcounts-com"
     prd = "prd-jamesrcounts-com"

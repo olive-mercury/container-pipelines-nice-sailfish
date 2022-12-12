@@ -11,12 +11,6 @@ Description: The name of the resource group for this project's ops resources.
 
 Type: `string`
 
-### <a name="input_ops_subscription_id"></a> [ops\_subscription\_id](#input\_ops\_subscription\_id)
-
-Description: The subscription ID containing this project's ops resources
-
-Type: `string`
-
 ### <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name)
 
 Description: The name of the resource group for this project.
@@ -109,8 +103,6 @@ The following requirements are needed by this module:
 The following providers are used by this module:
 
 - <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (3.34.0)
-
-- <a name="provider_azurerm.ops"></a> [azurerm.ops](#provider\_azurerm.ops) (3.34.0)
 
 ## Modules
 

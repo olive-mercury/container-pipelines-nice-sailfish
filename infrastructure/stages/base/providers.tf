@@ -13,17 +13,6 @@ provider "azurerm" {
   features {}
 }
 
-provider "azurerm" {
-  alias = "ops"
-
-  client_id       = var.client_id
-  client_secret   = var.client_secret
-  subscription_id = var.ops_subscription_id
-  tenant_id       = var.tenant_id
-
-  features {}
-}
-
 provider "aws" {
   access_key = var.aws_access_key_id
   region     = "us-west-2"

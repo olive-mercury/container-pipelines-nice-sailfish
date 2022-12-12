@@ -4,8 +4,6 @@ data "azurerm_resource_group" "rg" {
 }
 
 data "azurerm_resource_group" "ops" {
-  provider = azurerm.ops
-
   name = var.ops_resource_group_name
 }
 
