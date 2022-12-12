@@ -1,15 +1,22 @@
 terraform {
-  required_version = ">= 0.15"
+  required_version = "~> 1.3.6"
+
+  cloud {
+    organization = "olive-mercury"
+    workspaces {
+      tags = ["kubernetes", "container", "pipelines"]
+    }
+  }
 
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2"
+      version = "~> 3"
     }
 
     helm = {
       source  = "hashicorp/helm"
-      version = "~>2"
+      version = "~> 2"
     }
 
     kubernetes = {
